@@ -5,7 +5,7 @@ bits 64
 ; Variables (dont judge my variable names)
 segment .data
 	a db "---------------------------------", 0xa, 0x9, "ASSEMBLY CALCULATOR", 0x9, 0xa, "---------------------------------", 0xa, 0
-	op_sentence db 'Enter Your Operation (+, -, /, *): ', 0
+	op_sentence db 'Enter Your Operation or type exit to exit(+, -, /, *): ', 0
 	n_sent db "Enter The First Number: ", 0
 	n_sent_2 db "Enter The Second Number: ", 0
 	fmt db "%ld", 0
@@ -103,9 +103,15 @@ main:
 	; If operator is * jump to multiply function
 	cmp		rcx, "*"
 	je		.ml
+	
+	cmp 		rcx, "exit"
+	je		.exit
 
 	; If operator isnt either loop main func again
 	jmp main
+
+.exit
+call ExitProcess
 
 ; Add Function
 .ad:
