@@ -1,8 +1,8 @@
-; define that this is x64 assembly, default rel i dont what it does
+; bits 64 defines that this is x64 assembly, default rel decides that registerless instructions are rip-relative, which basically means you can use registers that start with r. Beyond this, I'm not exactly sure how it works.
 default rel
 bits 64
 
-; Variables (dont judge my variable names)
+; Variables (i mostly named the variable names random things because well... i have no creativity, might update the names in a new commit for clarity later.)
 segment .data
 	a db "---------------------------------", 0xa, 0x9, "ASSEMBLY CALCULATOR", 0x9, 0xa, "---------------------------------", 0xa, 0
 	op_sentence db 'Enter Your Operation or type exit to exit(+, -, /, *): ', 0
@@ -22,21 +22,21 @@ segment .data
 ; code text
 segment .text
 
-; globalizing all the functions (is globalizing a word)
+; globalizing all the functions (is globalizing a word?)
 global main
 global addey
 global subey
 global muley
 global divey
 
-; Getting some external functions from different dlls.
+; Getting some external functions from different dlls because it'll make our lives easier.
 extern printf
 extern scanf
 
 extern _CRT_INIT
 extern ExitProcess
 
-; Utility functions
+; Utility functions.
 addey:
 ; Move the edx register into the eax register
 mov	eax, edx
@@ -66,9 +66,10 @@ div ebx
 ret
 
 main:
-	; Microsoft x64 calling stack assembly thingie?
+	; Microsoft has an x64 calling convention that describes how it expects windows programs to work.
 	call _CRT_INIT
 
+	; rbp is not used for referencing local variables in the x64 calling convention, and 32 bytes are always allocated to rcd, rdx, 48, and 49, so move rbp into rsp, and subtract 32 bytes from rsp.
 	push	rbp
 	mov		rbp, rsp
 	sub		rsp, 32
